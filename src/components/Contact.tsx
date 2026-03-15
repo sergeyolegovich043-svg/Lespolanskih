@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, FormEvent } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { contactInfo, projectTypes } from "@/lib/constants";
 
@@ -23,6 +23,14 @@ export default function Contact() {
   });
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errors, setErrors] = useState<Partial<FormData>>({});
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const decoY1 = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const decoY2 = useTransform(scrollYProgress, [0, 1], [50, -100]);
 
   const validate = (): boolean => {
     const newErrors: Partial<FormData> = {};
@@ -61,7 +69,16 @@ export default function Contact() {
     } py-4 text-dark placeholder:text-dim focus:border-accent transition-colors duration-300 outline-none text-sm md:text-base`;
 
   return (
-    <section id="contact" className="section-padding relative overflow-hidden">
+    <section id="contact" ref={sectionRef} className="section-padding relative overflow-hidden">
+      {/* Parallax decorations */}
+      <motion.div
+        className="absolute top-[10%] left-[8%] w-[250px] h-[250px] rounded-full opacity-[0.05] pointer-events-none"
+        style={{ y: decoY1, background: "radial-gradient(circle, #E84233 0%, transparent 70%)" }}
+      />
+      <motion.div
+        className="absolute bottom-[10%] right-[5%] w-[1px] h-24 bg-gradient-to-b from-accent/15 to-transparent pointer-events-none rotate-[15deg]"
+        style={{ y: decoY2 }}
+      />
       <div className="max-w-7xl mx-auto">
         <SectionHeading
           label="Контакт"

@@ -1,13 +1,35 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function NdaBlock() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const decoY1 = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const decoY2 = useTransform(scrollYProgress, [0, 1], [80, -100]);
+  const cardY = useTransform(scrollYProgress, [0, 1], [30, -15]);
+
   return (
-    <section className="section-padding relative overflow-hidden">
+    <section ref={sectionRef} className="section-padding relative overflow-hidden">
+      {/* Parallax decorations */}
+      <motion.div
+        className="absolute -top-10 left-[15%] w-[200px] h-[200px] rounded-full opacity-[0.05] pointer-events-none"
+        style={{ y: decoY1, background: "radial-gradient(circle, #E84233 0%, transparent 70%)" }}
+      />
+      <motion.div
+        className="absolute bottom-[5%] right-[10%] w-2.5 h-2.5 rounded-full bg-accent/15 pointer-events-none"
+        style={{ y: decoY2 }}
+      />
+
       <div className="max-w-4xl mx-auto">
         <motion.div
           className="relative rounded-3xl overflow-hidden bg-dark text-white"
+          style={{ y: cardY }}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}

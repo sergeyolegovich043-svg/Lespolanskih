@@ -12,8 +12,18 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  /* Parallax layers — each moves at a different speed */
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const midY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
+  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  /* Floating shapes parallax */
+  const shape1Y = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const shape2Y = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const shape3Y = useTransform(scrollYProgress, [0, 1], [0, -200]);
+  const shape4Y = useTransform(scrollYProgress, [0, 1], [0, -60]);
 
   const scrollToSection = (id: string) => {
     const el = document.querySelector(id);
@@ -25,14 +35,22 @@ export default function Hero() {
       ref={ref}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background Layers */}
-      <div className="absolute inset-0">
-        {/* Hero Photo Background */}
+      {/* === LAYER 0: Deepest background — slowest parallax === */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-b from-secondary via-primary to-primary"
+        style={{ y: bgY }}
+      />
+
+      {/* === LAYER 1: Hero photo — medium parallax + zoom === */}
+      <motion.div
+        className="absolute inset-0"
+        style={{ y: bgY, scale: bgScale }}
+      >
         <motion.div
           className="absolute inset-0"
-          initial={{ scale: 1.05, opacity: 0 }}
+          initial={{ scale: 1.08, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.2, delay: 1.0, ease: "easeOut" }}
+          transition={{ duration: 1.4, delay: 1.0, ease: "easeOut" }}
         >
           <Image
             src="/images/hero.jpg"
@@ -44,14 +62,55 @@ export default function Hero() {
             sizes="100vw"
           />
         </motion.div>
+      </motion.div>
 
+      {/* === LAYER 2: Gradient overlays — mid parallax === */}
+      <motion.div className="absolute inset-0 pointer-events-none" style={{ y: midY }}>
+        {/* Bottom fade to white */}
+        <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-primary via-primary/60 to-transparent" />
+        {/* Top subtle vignette */}
+        <div className="absolute top-0 left-0 right-0 h-[30%] bg-gradient-to-b from-dark/20 to-transparent" />
+      </motion.div>
 
+      {/* === LAYER 3: Floating parallax shapes (Red Collar style) === */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Accent circle — top right */}
+        <motion.div
+          className="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full opacity-[0.07]"
+          style={{
+            y: shape1Y,
+            background: "radial-gradient(circle, #E84233 0%, transparent 70%)",
+          }}
+        />
+        {/* Large blurred ring — left */}
+        <motion.div
+          className="absolute top-[30%] -left-32 w-[400px] h-[400px] rounded-full border border-accent/10 opacity-40"
+          style={{ y: shape2Y }}
+        />
+        {/* Small accent dot — bottom right */}
+        <motion.div
+          className="absolute bottom-[20%] right-[15%] w-3 h-3 rounded-full bg-accent/30"
+          style={{ y: shape3Y }}
+        />
+        {/* Diagonal line accent */}
+        <motion.div
+          className="absolute top-[60%] left-[10%] w-[1px] h-24 bg-gradient-to-b from-accent/20 to-transparent rotate-[20deg]"
+          style={{ y: shape4Y }}
+        />
+        {/* Large soft circle — center */}
+        <motion.div
+          className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04]"
+          style={{
+            y: shape2Y,
+            background: "radial-gradient(circle, #E84233 0%, transparent 60%)",
+          }}
+        />
       </div>
 
-      {/* Content */}
+      {/* === LAYER 4: Content — fastest parallax (foreground) === */}
       <motion.div
         className="relative z-10 text-left px-6 md:px-12 lg:px-20 xl:px-32 w-full max-w-[1400px] mx-auto"
-        style={{ y, opacity }}
+        style={{ y: contentY, opacity }}
       >
         {/* Label */}
         <motion.div

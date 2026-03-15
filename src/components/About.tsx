@@ -1,7 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 
 const stats = [
@@ -11,8 +12,34 @@ const stats = [
 ];
 
 export default function About() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  /* Parallax speeds for decorations */
+  const decoY1 = useTransform(scrollYProgress, [0, 1], [80, -80]);
+  const decoY2 = useTransform(scrollYProgress, [0, 1], [60, -120]);
+  const decoY3 = useTransform(scrollYProgress, [0, 1], [40, -60]);
+  const imageY = useTransform(scrollYProgress, [0, 1], [40, -40]);
+
   return (
-    <section id="about" className="section-padding relative overflow-hidden">
+    <section id="about" ref={sectionRef} className="section-padding relative overflow-hidden">
+      {/* Parallax floating decorations */}
+      <motion.div
+        className="absolute -top-10 right-[10%] w-[250px] h-[250px] rounded-full opacity-[0.05] pointer-events-none"
+        style={{ y: decoY1, background: "radial-gradient(circle, #E84233 0%, transparent 70%)" }}
+      />
+      <motion.div
+        className="absolute top-[40%] -left-16 w-[1px] h-32 bg-gradient-to-b from-accent/15 to-transparent pointer-events-none"
+        style={{ y: decoY2 }}
+      />
+      <motion.div
+        className="absolute bottom-[10%] right-[5%] w-2 h-2 rounded-full bg-accent/20 pointer-events-none"
+        style={{ y: decoY3 }}
+      />
+
       <div className="max-w-7xl mx-auto">
         <SectionHeading
           label="О себе"
@@ -81,8 +108,8 @@ export default function About() {
               ease: [0.25, 0.4, 0.25, 1],
             }}
           >
-            {/* Photo */}
-            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden group">
+            {/* Photo with parallax */}
+            <motion.div className="relative aspect-[4/5] rounded-3xl overflow-hidden group" style={{ y: imageY }}>
               <Image
                 src="/images/hero-about.jpg"
                 alt="Полянских Олеся Юрьевна — Продюсер"
@@ -103,7 +130,7 @@ export default function About() {
                   </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>

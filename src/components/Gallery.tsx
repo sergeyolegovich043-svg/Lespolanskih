@@ -64,11 +64,30 @@ function GalleryCard({
 }
 
 export default function Gallery() {
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: galleryScroll } = useScroll({
+    target: galleryRef,
+    offset: ["start end", "end start"],
+  });
+
+  const decoY1 = useTransform(galleryScroll, [0, 1], [100, -100]);
+  const decoY2 = useTransform(galleryScroll, [0, 1], [50, -80]);
+
   return (
     <section
       id="gallery"
+      ref={galleryRef}
       className="section-padding relative overflow-hidden bg-secondary"
     >
+      {/* Parallax decorations */}
+      <motion.div
+        className="absolute top-[5%] left-[5%] w-[300px] h-[300px] rounded-full opacity-[0.04] pointer-events-none"
+        style={{ y: decoY1, background: "radial-gradient(circle, #E84233 0%, transparent 70%)" }}
+      />
+      <motion.div
+        className="absolute bottom-[15%] right-[8%] w-[1px] h-28 bg-gradient-to-b from-accent/15 to-transparent pointer-events-none -rotate-12"
+        style={{ y: decoY2 }}
+      />
       <div className="max-w-7xl mx-auto">
         <SectionHeading
           label="Визуальный поток"
