@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import AnimatedText from "./AnimatedText";
 
 export default function Hero() {
@@ -12,18 +12,22 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  /* Parallax layers — each moves at a different speed */
-  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
-  const midY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
-  const contentY = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  /* Smooth spring for buttery parallax */
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 80,
+    damping: 30,
+    restDelta: 0.001,
+  });
 
-  /* Floating shapes parallax */
-  const shape1Y = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const shape2Y = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const shape3Y = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  const shape4Y = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  /* Parallax layers — gentle values, GPU-accelerated */
+  const bgY = useTransform(smoothProgress, [0, 1], [0, 150]);
+  const contentY = useTransform(smoothProgress, [0, 1], [0, 200]);
+  const opacity = useTransform(smoothProgress, [0, 0.7], [1, 0]);
+
+  /* Floating shapes — subtle movement */
+  const shape1Y = useTransform(smoothProgress, [0, 1], [0, -60]);
+  const shape2Y = useTransform(smoothProgress, [0, 1], [0, -40]);
+  const shape3Y = useTransform(smoothProgress, [0, 1], [0, -90]);
 
   const scrollToSection = (id: string) => {
     const el = document.querySelector(id);
@@ -35,22 +39,16 @@ export default function Hero() {
       ref={ref}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* === LAYER 0: Deepest background — slowest parallax === */}
+      {/* === LAYER 1: Hero photo — slow parallax === */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-secondary via-primary to-primary"
+        className="absolute inset-0 will-change-transform"
         style={{ y: bgY }}
-      />
-
-      {/* === LAYER 1: Hero photo — medium parallax + zoom === */}
-      <motion.div
-        className="absolute inset-0"
-        style={{ y: bgY, scale: bgScale }}
       >
         <motion.div
-          className="absolute inset-0"
-          initial={{ scale: 1.08, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.4, delay: 1.0, ease: "easeOut" }}
+          className="absolute inset-[-10%]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, delay: 1.0, ease: "easeOut" }}
         >
           <Image
             src="/images/hero.jpg"
@@ -64,37 +62,25 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* === LAYER 2: Parallax mid layer === */}
-      <motion.div className="absolute inset-0 pointer-events-none" style={{ y: midY }} />
-
-      {/* === LAYER 3: Floating parallax shapes (Red Collar style) === */}
+      {/* === LAYER 2: Floating parallax shapes === */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Accent circle — top right */}
         <motion.div
-          className="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full opacity-[0.07]"
+          className="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full opacity-[0.07] will-change-transform"
           style={{
             y: shape1Y,
             background: "radial-gradient(circle, #E84233 0%, transparent 70%)",
           }}
         />
-        {/* Large blurred ring — left */}
         <motion.div
-          className="absolute top-[30%] -left-32 w-[400px] h-[400px] rounded-full border border-accent/10 opacity-40"
+          className="absolute top-[30%] -left-32 w-[400px] h-[400px] rounded-full border border-accent/10 opacity-40 will-change-transform"
           style={{ y: shape2Y }}
         />
-        {/* Small accent dot — bottom right */}
         <motion.div
-          className="absolute bottom-[20%] right-[15%] w-3 h-3 rounded-full bg-accent/30"
+          className="absolute bottom-[20%] right-[15%] w-3 h-3 rounded-full bg-accent/30 will-change-transform"
           style={{ y: shape3Y }}
         />
-        {/* Diagonal line accent */}
         <motion.div
-          className="absolute top-[60%] left-[10%] w-[1px] h-24 bg-gradient-to-b from-accent/20 to-transparent rotate-[20deg]"
-          style={{ y: shape4Y }}
-        />
-        {/* Large soft circle — center */}
-        <motion.div
-          className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04]"
+          className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04] will-change-transform"
           style={{
             y: shape2Y,
             background: "radial-gradient(circle, #E84233 0%, transparent 60%)",
@@ -102,9 +88,9 @@ export default function Hero() {
         />
       </div>
 
-      {/* === LAYER 4: Content — fastest parallax (foreground) === */}
+      {/* === LAYER 3: Content — fastest parallax === */}
       <motion.div
-        className="relative z-10 text-left px-6 md:px-12 lg:px-20 xl:px-32 w-full max-w-[1400px] mx-auto"
+        className="relative z-10 text-left px-6 md:px-12 lg:px-20 xl:px-32 w-full max-w-[1400px] mx-auto will-change-transform"
         style={{ y: contentY, opacity }}
       >
         {/* Label */}
