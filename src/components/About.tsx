@@ -89,6 +89,9 @@ export default function About() {
                 fill
                 className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                 sizes="(max-width: 1024px) 100vw, 50vw"
+                quality={80}
+                placeholder="blur"
+                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWYwIi8+PC9zdmc+"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-dark/10 via-transparent to-transparent" />
 

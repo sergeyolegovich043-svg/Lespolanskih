@@ -36,7 +36,10 @@ function ProjectCard({
           alt={project.title}
           fill
           className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 640px"
+          quality={75}
+          placeholder="blur"
+          blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjUwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjVmNWYwIi8+PC9zdmc+"
         />
 
         {/* Gradient overlay */}
@@ -195,7 +198,8 @@ function ProjectModal({
                 alt={`${project.title} — фото ${activeImage + 1}`}
                 fill
                 className="object-contain"
-                sizes="(max-width: 1280px) 100vw, 1280px"
+                sizes="(max-width: 1280px) 100vw, 1024px"
+                quality={75}
               />
             </motion.div>
           </AnimatePresence>
@@ -267,6 +271,7 @@ function ProjectModal({
                   fill
                   className="object-cover"
                   sizes="80px"
+                  quality={50}
                 />
               </button>
             ))}
