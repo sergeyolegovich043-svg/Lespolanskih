@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { galleryItems } from "@/lib/constants";
 
@@ -13,16 +12,8 @@ function GalleryCard({
   item: (typeof galleryItems)[0];
   index: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], [20, -20]);
-
   return (
     <motion.div
-      ref={ref}
       className={`group relative rounded-2xl overflow-hidden cursor-pointer ${
         item.span || ""
       }`}
@@ -35,9 +26,8 @@ function GalleryCard({
         ease: [0.25, 0.4, 0.25, 1],
       }}
     >
-      <motion.div
+      <div
         className="w-full h-full min-h-[200px] md:min-h-[250px] relative"
-        style={{ y }}
       >
         <Image
           src={item.image}
@@ -46,7 +36,7 @@ function GalleryCard({
           className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
           sizes="(max-width: 768px) 50vw, 25vw"
         />
-      </motion.div>
+      </div>
 
       {/* Hover Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-dark/70 via-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end p-5">
@@ -64,30 +54,11 @@ function GalleryCard({
 }
 
 export default function Gallery() {
-  const galleryRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress: galleryScroll } = useScroll({
-    target: galleryRef,
-    offset: ["start end", "end start"],
-  });
-
-  const decoY1 = useTransform(galleryScroll, [0, 1], [100, -100]);
-  const decoY2 = useTransform(galleryScroll, [0, 1], [50, -80]);
-
   return (
     <section
       id="gallery"
-      ref={galleryRef}
       className="section-padding relative overflow-hidden bg-secondary"
     >
-      {/* Parallax decorations */}
-      <motion.div
-        className="absolute top-[5%] left-[5%] w-[300px] h-[300px] rounded-full opacity-[0.04] pointer-events-none"
-        style={{ y: decoY1, background: "radial-gradient(circle, #E84233 0%, transparent 70%)" }}
-      />
-      <motion.div
-        className="absolute bottom-[15%] right-[8%] w-[1px] h-28 bg-gradient-to-b from-accent/15 to-transparent pointer-events-none -rotate-12"
-        style={{ y: decoY2 }}
-      />
       <div className="max-w-7xl mx-auto">
         <SectionHeading
           label="Визуальный поток"

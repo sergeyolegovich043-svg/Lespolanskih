@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { projects, type Project } from "@/lib/constants";
 
@@ -344,28 +344,11 @@ function ProjectModal({
 export default function Projects() {
   const [selected, setSelected] = useState<Project | null>(null);
   const [showAll, setShowAll] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const decoY1 = useTransform(scrollYProgress, [0, 1], [120, -120]);
-  const decoY2 = useTransform(scrollYProgress, [0, 1], [60, -90]);
 
   const displayedProjects = showAll ? projects : projects.slice(0, 6);
 
   return (
-    <section id="projects" ref={sectionRef} className="section-padding relative overflow-hidden">
-      {/* Parallax decorations */}
-      <motion.div
-        className="absolute top-[5%] -right-20 w-[400px] h-[400px] rounded-full opacity-[0.04] pointer-events-none"
-        style={{ y: decoY1, background: "radial-gradient(circle, #E84233 0%, transparent 70%)" }}
-      />
-      <motion.div
-        className="absolute bottom-[25%] left-[3%] w-3 h-3 rounded-full bg-accent/15 pointer-events-none"
-        style={{ y: decoY2 }}
-      />
+    <section id="projects" className="section-padding relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <SectionHeading
           label="Портфолио"

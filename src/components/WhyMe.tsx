@@ -1,31 +1,12 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { advantages } from "@/lib/constants";
 
 export default function WhyMe() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const decoY1 = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const decoY2 = useTransform(scrollYProgress, [0, 1], [60, -80]);
-
   return (
-    <section ref={sectionRef} className="section-padding relative overflow-hidden">
-      {/* Parallax decorations */}
-      <motion.div
-        className="absolute top-[10%] right-[5%] w-[350px] h-[350px] rounded-full opacity-[0.04] pointer-events-none"
-        style={{ y: decoY1, background: "radial-gradient(circle, #E84233 0%, transparent 70%)" }}
-      />
-      <motion.div
-        className="absolute bottom-[20%] left-[8%] w-[1px] h-20 bg-gradient-to-b from-accent/20 to-transparent pointer-events-none rotate-12"
-        style={{ y: decoY2 }}
-      />
+    <section className="section-padding relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <SectionHeading
           label="Преимущества"

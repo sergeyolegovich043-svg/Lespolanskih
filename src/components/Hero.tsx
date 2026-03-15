@@ -12,22 +12,16 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
 
-  /* Smooth spring for buttery parallax */
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 80,
-    damping: 30,
+  /* Single smooth spring — the only scroll-linked value */
+  const smooth = useSpring(scrollYProgress, {
+    stiffness: 50,
+    damping: 20,
     restDelta: 0.001,
   });
 
-  /* Parallax layers — gentle values, GPU-accelerated */
-  const bgY = useTransform(smoothProgress, [0, 1], [0, 150]);
-  const contentY = useTransform(smoothProgress, [0, 1], [0, 200]);
-  const opacity = useTransform(smoothProgress, [0, 0.7], [1, 0]);
-
-  /* Floating shapes — subtle movement */
-  const shape1Y = useTransform(smoothProgress, [0, 1], [0, -60]);
-  const shape2Y = useTransform(smoothProgress, [0, 1], [0, -40]);
-  const shape3Y = useTransform(smoothProgress, [0, 1], [0, -90]);
+  const bgY = useTransform(smooth, [0, 1], [0, 120]);
+  const contentY = useTransform(smooth, [0, 1], [0, 180]);
+  const opacity = useTransform(smooth, [0, 0.6], [1, 0]);
 
   const scrollToSection = (id: string) => {
     const el = document.querySelector(id);
@@ -39,13 +33,13 @@ export default function Hero() {
       ref={ref}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* === LAYER 1: Hero photo — slow parallax === */}
+      {/* Background photo — slow parallax */}
       <motion.div
-        className="absolute inset-0 will-change-transform"
+        className="absolute inset-[-5%] will-change-transform"
         style={{ y: bgY }}
       >
         <motion.div
-          className="absolute inset-[-10%]"
+          className="absolute inset-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2, delay: 1.0, ease: "easeOut" }}
@@ -62,33 +56,7 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* === LAYER 2: Floating parallax shapes === */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <motion.div
-          className="absolute -top-20 -right-20 w-[300px] h-[300px] rounded-full opacity-[0.07] will-change-transform"
-          style={{
-            y: shape1Y,
-            background: "radial-gradient(circle, #E84233 0%, transparent 70%)",
-          }}
-        />
-        <motion.div
-          className="absolute top-[30%] -left-32 w-[400px] h-[400px] rounded-full border border-accent/10 opacity-40 will-change-transform"
-          style={{ y: shape2Y }}
-        />
-        <motion.div
-          className="absolute bottom-[20%] right-[15%] w-3 h-3 rounded-full bg-accent/30 will-change-transform"
-          style={{ y: shape3Y }}
-        />
-        <motion.div
-          className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-[0.04] will-change-transform"
-          style={{
-            y: shape2Y,
-            background: "radial-gradient(circle, #E84233 0%, transparent 60%)",
-          }}
-        />
-      </div>
-
-      {/* === LAYER 3: Content — fastest parallax === */}
+      {/* Content — faster parallax */}
       <motion.div
         className="relative z-10 text-left px-6 md:px-12 lg:px-20 xl:px-32 w-full max-w-[1400px] mx-auto will-change-transform"
         style={{ y: contentY, opacity }}
