@@ -64,13 +64,8 @@ export default function Hero() {
         </motion.div>
       </motion.div>
 
-      {/* === LAYER 2: Gradient overlays — mid parallax === */}
-      <motion.div className="absolute inset-0 pointer-events-none" style={{ y: midY }}>
-        {/* Bottom fade to white */}
-        <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-gradient-to-t from-primary via-primary/60 to-transparent" />
-        {/* Top subtle vignette */}
-        <div className="absolute top-0 left-0 right-0 h-[30%] bg-gradient-to-b from-dark/20 to-transparent" />
-      </motion.div>
+      {/* === LAYER 2: Parallax mid layer === */}
+      <motion.div className="absolute inset-0 pointer-events-none" style={{ y: midY }} />
 
       {/* === LAYER 3: Floating parallax shapes (Red Collar style) === */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
