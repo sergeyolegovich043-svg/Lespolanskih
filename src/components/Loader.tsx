@@ -24,25 +24,22 @@ export default function Loader({ onComplete }: { onComplete: () => void }) {
     <AnimatePresence>
       {phase !== "exit" ? (
         <motion.div
-          className="fixed inset-0 z-[10000] bg-primary"
+          className="fixed inset-0 z-[10000] bg-primary flex flex-col items-center justify-center"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7, ease: [0.25, 0.4, 0.25, 1] }}
         >
-          {/* Logo — top-left, same position as Navbar */}
-          <div className="px-6 md:px-12 py-6">
-            <motion.span
-              className="text-xl md:text-2xl font-display font-bold tracking-tight text-dark"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.5,
-                ease: [0.25, 0.4, 0.25, 1],
-              }}
-            >
-              х
-              <span className="text-accent">.</span>
-            </motion.span>
-          </div>
+          <motion.span
+            className="text-4xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight text-dark"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              ease: [0.25, 0.4, 0.25, 1],
+            }}
+          >
+            Х
+            <span className="text-accent">.</span>
+          </motion.span>
         </motion.div>
       ) : null}
     </AnimatePresence>
