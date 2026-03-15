@@ -59,7 +59,7 @@ export default function Navbar() {
             }}
           >
             <span className={`text-xl md:text-2xl font-display font-bold tracking-tight transition-colors duration-500 ${scrolled ? 'text-dark' : 'text-white'}`}>
-              полянских
+              Х
               <span className="text-accent">.</span>
             </span>
           </motion.a>
